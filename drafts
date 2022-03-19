@@ -1,0 +1,48 @@
+a=eth.get_erc721_token_transfer_events_by_contract_address_paginated(contract_address='0xCa7cA7BcC765F77339bE2d648BA53ce9c8a262bD', page=10000, offset=5, sort='desc', startblock=0)
+# b=eth.get_erc721_token_transfer_events_by_contract_address_paginated(contract_address='0xCa7cA7BcC765F77339bE2d648BA53ce9c8a262bD', page=2, offset=5, sort='desc')
+# df=pd.read_pickle(f'/Users/rafaelcizeskinitchai/Documents/FeistyAnalytics/REPORT_PFP/FeistyReport/dataframe_test.pkl')
+# df_new = pd.DataFrame(stats, index=[timestamp_timer])
+# df = pd.concat([df_old, df_new])
+# df.to_pickle(f"/Users/rafaelcizeskinitchai/Documents/github/feistybot/feistybot/data/{slug}/dataframe.pkl")
+
+# tx=w3.eth.get_transaction('0x21c54a5ddcfd37385ecb571c65a9986602845e77e5fecb7dd993313504f2ee9c')
+# test= to_text(hexstr=b["input"])
+
+#print(len(a), len(b), '\n\n\n\n', a[0], '\n\n\n\n', a[-1], '\n\n\n\n', b[0], '\n\n\n\n', b[-1])
+
+#a = eth.get_internal_txs_by_block_range_paginated(startblock=0, endblock=14364098, page=1, offset=100, sort='desc')
+#print(a)
+
+
+r = requests.get(
+        "https://api.etherscan.io/api",
+        params={
+            "module": "account",
+            "action": "txlist",
+            "address": acc,
+            "startblock": 0,
+            "endblock": 99999999,
+            "page": 1,
+            "offset": 10,
+            "sort": 'asc',
+            "apikey": api_key,
+        },
+        headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, '
+                               'like Gecko) Chrome/50.0.2661.102 Safari/537.36'})
+
+print(r.json()["result"])
+
+
+w3 = Web3(Web3.HTTPProvider('https://eth-mainnet.alchemyapi.io/v2/g8E7SWPSitoMKPgSl5o7b2nuZx4ZUN-H'))
+ETHERSCAN_API_KEY = 'Y7U19EVBE7J8ZPBRQENQGQPYPHIXHTPHAH'
+
+tx=w3.eth.get_transaction('0xb1c137de3ef9dad0898c35543856c6f20a9c4da5adb88d6183e7f4738a77aa3e')
+
+abi_endpoint = f"https://api.etherscan.io/api?module=contract&action=getabi&address={tx['to']}&apikey={ETHERSCAN_API_KEY}"
+abi = json.loads(requests.get(abi_endpoint).text)
+
+contract = w3.eth.contract(address=tx['to'], abi=abi['result'])
+
+func_obj, func_params = contract.decode_function_input(tx['input'])
+
+print(func_obj.__class__.__name__)
